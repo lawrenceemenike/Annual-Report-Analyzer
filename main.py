@@ -61,15 +61,17 @@ def extract_entities(text):
 def extract_financial_metrics(text):
     metrics = {}
     patterns = {
-        'revenue': r'\$?\s*\d+(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in revenue|revenue)',
-        'profit': r'\$?\s*\d+(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in (?:net )?profit|(?:net )?profit)',
-        'assets': r'\$?\s*\d+(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in (?:total )?assets|(?:total )?assets)',
+        'revenue': r'(\$\s?\d+(?:,\d+)*(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in revenue|revenue))',
+        'profit': r'(\$\s?\d+(?:,\d+)*(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in (?:net )?profit|(?:net )?profit))',
+        'assets': r'(\$\s?\d+(?:,\d+)*(?:\.\d+)?\s*(?:billion|million|thousand)?\s*(?:in (?:total )?assets|(?:total )?assets))',
     }
     
     for metric, pattern in patterns.items():
         matches = re.findall(pattern, text, re.IGNORECASE)
         if matches:
-            metrics[metric] = matches
+            # Clean the matches to remove leading/trailing whitespace and newlines
+            cleaned_matches = [match.strip() for match in matches]
+            metrics[metric] = cleaned_matches
     return metrics
 
 def analyze_esg(text):
@@ -96,9 +98,16 @@ def generate_summary(sentiment_result, entities, financial_metrics, esg_result):
     sentiment = max(sentiment_result, key=sentiment_result.get)
     confidence = sentiment_result[sentiment]
     
+    financial_highlights = ""
+    if financial_metrics:
+        for key, values in financial_metrics.items():
+            financial_highlights += f"{key.capitalize()}: {', '.join(values)}\n"
+    else:
+        financial_highlights = "No financial metrics extracted."
+    
     summary = {
         "executive_summary": f"The overall sentiment of this report is {sentiment} with {confidence:.2%} confidence.",
-        "financial_highlights": "Key financial metrics extracted:\n" + '\n'.join([f"{k}: {v}" for k, v in financial_metrics.items()]),
+        "financial_highlights": financial_highlights.strip(),
         "business_highlights": "Key entities mentioned:\n" + '\n'.join([f"{k}: {', '.join(v[:5])}" for k, v in entities.items()]),
         "risk_analysis": "A detailed risk analysis should be conducted by financial experts.",
         "peer_comparison": "Comparative analysis with peers requires additional data and expert interpretation.",
@@ -106,6 +115,7 @@ def generate_summary(sentiment_result, entities, financial_metrics, esg_result):
         "esg_analysis": "ESG Analysis:\n" + '\n'.join([f"{k}: {v:.2%}" for k, v in esg_result.items()])
     }
     return summary
+
 
 def process_document(filepath):
     text = extract_text_from_file(filepath)
