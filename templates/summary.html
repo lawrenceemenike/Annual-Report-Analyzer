@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Report Summary</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Annual Report Summary</h1>
+        
+        <section class="mb-4">
+            <h2>Executive Summary</h2>
+            <p>{{ summary.executive_summary }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>Financial Highlights</h2>
+            <p>{{ summary.financial_highlights | safe }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>Business Highlights</h2>
+            <p>{{ summary.business_highlights | safe }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>Risk Analysis</h2>
+            <p>{{ summary.risk_analysis }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>Peer Comparison</h2>
+            <p>{{ summary.peer_comparison }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>Outlook</h2>
+            <p>{{ summary.outlook }}</p>
+        </section>
+        
+        <section class="mb-4">
+            <h2>ESG Analysis</h2>
+            <p>{{ summary.esg_analysis | safe }}</p>
+        </section>
+        
+        <a href="{{ url_for('download_pdf', report_id=report_id) }}" class="btn btn-primary">Download Original PDF</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

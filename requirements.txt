@@ -1,0 +1,8 @@
+Flask==2.3.3
+Flask-Bootstrap==3.3.7.1
+torch==2.0.1
+transformers==4.31.0
+PyPDF2==3.0.1
+python-docx==0.8.11
+spacy==3.6.0
+sqlite3==3.38.5
